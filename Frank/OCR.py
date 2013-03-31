@@ -38,6 +38,7 @@ class OCR:
 						sys.exit()
 						
 					elif key in ascii:
+						print(key)
 						targets.append(key)
 						sample = char_norm.reshape((1,self.dimrow))
                 		samples = np.append(samples,sample,0)
@@ -48,7 +49,7 @@ class OCR:
 		print "training complete"
 		cv2.destroyWindow('train')
 		np.savetxt('{0}.data'.format(training_image),samples)
-		np.savetxt('{0}_targets'.format(training_image),samples)
+		np.savetxt('{0}_targets'.format(training_image),targets)
 		
 		
 		self.ann.train(samples, targets)
