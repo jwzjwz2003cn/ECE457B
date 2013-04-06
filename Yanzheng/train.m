@@ -256,7 +256,8 @@ case 11 % Accept parameters for network training
     TRAINING_NUM_LAYERS = str2num(get(H.edit(6),'String'));
 
     InitializeNeuralNetwork();
-end
+
+end % end of train()
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
