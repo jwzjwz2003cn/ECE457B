@@ -79,11 +79,11 @@ case 2 % Create binary image; label and segment it; find features
 	count = 1;
 	thresh = 125;
     
-   % G = fspecial('gaussian', [5 5], 1);
-    %I.image = imfilter(I.Image, G, 'same');
-    I.bw = adaptivethreshold(I.Image,15,0,0);
+    %G = fspecial('gaussian', [5 5], 1);
+   % I.image = imfilter(I.Image, G, 'same');
+   % I.bw = adaptivethreshold(I.Image,15,0,0);
 
-	%I.bw = (I.Image < thresh);
+	I.bw = (I.Image < thresh);
 
 	% Store pre-existing Class labels, if they exist
 	try
@@ -109,7 +109,7 @@ case 2 % Create binary image; label and segment it; find features
 	% Segment the labeled image into character sub-images
 	stats = SegmentImageIntoChars(I);
 	P = FormInputMatrixForNetwork(stats);
-
+    
 	% Fix the Orientation property
 	ang = [stats.Orientation];
 	ang = (180+ang).*(ang < 0) + ang.*(ang > 0);
@@ -336,10 +336,10 @@ else
 end
 
 thresh = 125;
-%I.bw = (I.Image < thresh);
+I.bw = (I.Image < thresh);
 %G = fspecial('gaussian', [5 5], 1);
 %I.image = imfilter(I.Image, G, 'same');
-I.bw = adaptivethreshold(I.Image,15,0,0);
+%I.bw = adaptivethreshold(I.Image,15,0.01,0);
 % Store pre-existing Class labels, if they exist
 try
     len = length(stats);
@@ -367,6 +367,7 @@ stats = regionprops(I.label,'Image','Eccentricity','Orientation');
 
 num = length(stats);
 for n = 1:num
+    imwrite(stats(n).Image, 'temp_char.png','png');
     stats(n).Image = imresize(stats(n).Image, [10, 10]);
 end
 
@@ -608,14 +609,14 @@ function InitializeNeuralNetwork()
     global TRAINING_HIDDEN_NODES
     global TRAINING_NUM_LAYERS
 
-    net = feedforwardnet(TRAINING_HIDDEN_NODES,'traingd');
+    net = feedforwardnet(TRAINING_HIDDEN_NODES);
     net
    % net.numLayers = TRAINING_NUM_LAYERS;
     %net.numInputs = 1;
     %net.inputConnect(1) = 1;
     %net.layerConnect(2,1) = 1;
     %net.outputConnect(2) = 1;
-    net.performFcn = 'sae';
+    net.performFcn = 'mse';
     net.divideFcn = 'dividetrain';
     %net = init(net);
     net.trainParam.show = 100; % show result every 100 iterations.
